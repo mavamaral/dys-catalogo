@@ -45,5 +45,6 @@ Abrí una sesión de Claude Code sobre este repositorio y escribí:
 Notas:
 - La fecha "Precios actualizados al …" es la del último día en que algo cambió
   (precio, stock, producto o foto), no la de la última revisión.
-- Requiere Python 3 con Pillow (`pip install pillow`).
+- Requiere Python 3 con Pillow. Si `python3 -c "import PIL"` falla:
+  `python3 -m pip install --target /tmp/pylib pillow` y `export PYTHONPATH=/tmp/pylib`.
 - Para probar la página en la compu: `python3 -m http.server` y abrir `http://localhost:8000`.
