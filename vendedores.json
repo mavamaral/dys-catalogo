@@ -1,7 +1,7 @@
 {
-  "general": { "nombre": "DYS Online", "whatsapp": "5491164320325" },
+  "general": { "nombre": "DYS Online", "whatsapp": "5491165666568" },
   "vendedores": [
-    { "codigo": "leandro-varela", "nombre": "Leandro Varela", "whatsapp": "5491165723205" },
-    { "codigo": "daniel-saracchi", "nombre": "Daniel Saracchi", "whatsapp": "5491163088807" }
+    { "codigo": "leandro-varela", "nombre": "Leandro Varela", "whatsapp": "5491153232875" },
+    { "codigo": "daniel-saracchi", "nombre": "Daniel Saracchi", "whatsapp": "5491131594583" }
   ]
 }
