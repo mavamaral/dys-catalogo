@@ -17,13 +17,15 @@ Se publica con GitHub Pages en **https://mayoristas.dysonline.com.ar**.
 
 | Link | El pedido llega a |
 |---|---|
-| https://mayoristas.dysonline.com.ar/ | DYS Online (11 6566-6568) |
+| https://mayoristas.dysonline.com.ar/ | DYS Online (número `general` de `vendedores.json`) |
+| https://mayoristas.dysonline.com.ar/?v=general | DYS Online, y además borra el vendedor que el cliente tenía recordado |
 | https://mayoristas.dysonline.com.ar/?v=leandro-varela | Leandro Varela |
 | https://mayoristas.dysonline.com.ar/?v=daniel-saracchi | Daniel Saracchi |
 
 El navegador del cliente recuerda el vendedor: si después entra sin `?v=`, el pedido
 sigue yendo al mismo vendedor. Si entra con otro `?v=`, se reemplaza. Un código que no
-existe en `vendedores.json` manda el pedido al número general.
+existe en `vendedores.json` manda el pedido al número general. Arriba siempre se muestra
+"Te atiende: …" con el vendedor o con DYS Online.
 
 ### Cómo agregar, editar o borrar un vendedor
 

@@ -639,7 +639,7 @@ body.lock{overflow:hidden}
       seller = v ? { nombre: String(v.nombre || "").trim() || GENERAL.nombre, whatsapp: digits(v.whatsapp), propio: true }
                  : { nombre: String(gen.nombre || GENERAL.nombre), whatsapp: digits(gen.whatsapp), propio: false };
       $("#vendName").textContent = seller.nombre;
-      $("#vend").hidden = !seller.propio;
+      $("#vend").hidden = false;
     });
   function fmtDate(iso){
     const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || "");
