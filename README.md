@@ -8,7 +8,7 @@ Se publica con GitHub Pages en **https://mayoristas.dysonline.com.ar**.
 | `index.html` | La página completa (estilos y código adentro) |
 | `productos.json` | Productos exportados del catálogo privado + fecha `actualizado` |
 | `fotos/` | Fotos JPG de ~600 px, una por producto (`<id>.jpg`); `fuentes.json` es interno del script |
-| `assets/` | Logo e íconos de contacto |
+| `assets/` | Logo e ícono de la dirección |
 | `scripts/sync.py` | Regenera `productos.json` y `fotos/` desde la base del artefacto |
 | `vendedores.json` | Vendedores y sus WhatsApp (se edita a mano; la sincronización no lo toca) |
 | `CNAME` | Dominio propio para GitHub Pages |

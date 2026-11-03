@@ -203,8 +203,6 @@ body.lock{overflow:hidden}
   <section class="contact" aria-label="Contacto">
     <img class="logo" src="assets/logo.png" alt="DYS Online" width="278" height="109" loading="lazy">
     <ul>
-      <li><a href="https://wa.me/5491165666568" target="_blank" rel="noopener"><img src="assets/ic_chat.png" alt="WhatsApp" width="36" height="36" loading="lazy">11 6566-6568</a></li>
-      <li><a href="tel:+541148802444"><img src="assets/ic_phone.png" alt="Teléfono" width="36" height="36" loading="lazy">4880-2444</a></li>
       <li><a href="https://www.google.com/maps/search/?api=1&query=Av.+Del+Barco+Centenera+1778,+CABA" target="_blank" rel="noopener"><img src="assets/ic_pin.png" alt="Dirección" width="36" height="36" loading="lazy">Av. Del Barco Centenera 1778, CABA</a></li>
     </ul>
   </section>
@@ -294,8 +292,16 @@ body.lock{overflow:hidden}
   let seller = { ...GENERAL, propio: false };
 
   const state = { animal: "Perros", cat: "Todas", q: "", products: [], byId: new Map() };
-  let cart = store.get(CART_KEY, {});
-  if (!cart || typeof cart !== "object" || Array.isArray(cart)) cart = {};
+  /* El pedido vive solo en esta pestaña (sessionStorage): sobrevive a recargar, pero cada vez
+     que se abre un link el pedido arranca vacío. Los datos del cliente sí se recuerdan (localStorage). */
+  const cartStore = {
+    get(){ try { const v = JSON.parse(sessionStorage.getItem(CART_KEY)); return v && typeof v === "object" && !Array.isArray(v) ? v : {}; } catch (e){ return {}; } },
+    set(v){ try { sessionStorage.setItem(CART_KEY, JSON.stringify(v)); } catch (e){} }
+  };
+  try { localStorage.removeItem(CART_KEY); } catch (e){} // pedido guardado por la versión anterior
+  const navType = (performance.getEntriesByType && performance.getEntriesByType("navigation")[0] || {}).type;
+  let cart = navType === "reload" || navType === "back_forward" ? cartStore.get() : {};
+  cartStore.set(cart);
 
   /* Categoría con la que se muestra un producto en cada sección */
   function catOf(p, animal){
@@ -386,7 +392,7 @@ body.lock{overflow:hidden}
     if (!p || p.sinStock) return;
     n = Math.max(0, Math.min(9999, Math.floor(Number(n) || 0)));
     if (n) cart[id] = n; else delete cart[id];
-    store.set(CART_KEY, cart);
+    cartStore.set(cart);
     if (from !== "card-input") refreshCard(id);
     updateBar();
     if (!$("#sheet").hidden) renderSheet(from === "sheet-input" ? id : null);
@@ -421,7 +427,7 @@ body.lock{overflow:hidden}
       if (!p || p.sinStock || q <= 0){ if (p && p.sinStock) removed.push(p); delete cart[id]; }
       else cart[id] = Math.min(q, 9999);
     }
-    store.set(CART_KEY, cart);
+    cartStore.set(cart);
     return removed;
   }
 
@@ -611,16 +617,11 @@ body.lock{overflow:hidden}
     }
     disarmEmpty();
     const ids = Object.keys(cart);
-    cart = {}; store.set(CART_KEY, cart);
+    cart = {}; cartStore.set(cart);
     ids.forEach(refreshCard);
     updateBar();
     closeSheet();
     toast("Pedido vaciado");
-  });
-  window.addEventListener("storage", e => {
-    if (e.key !== CART_KEY) return;
-    cart = store.get(CART_KEY, {}) || {};
-    render(); updateBar();
   });
   window.addEventListener("resize", updateBar);
   if ("ResizeObserver" in window) new ResizeObserver(() => { if (!$("#cartbar").hidden) document.documentElement.style.setProperty("--bar-h", $("#cartbar").offsetHeight + "px"); }).observe($("#cartbar"));
