@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-10-30",
+ "actualizado": "2026-11-03",
  "productos": [
   {
    "id": "s01",
@@ -1311,7 +1311,7 @@
    "animal": "Perros",
    "orden": 60,
    "etiqueta": "",
-   "sinStock": false,
+   "sinStock": true,
    "foto": "fotos/gtst6yadw6of4wu7hihc.jpg?v=082d4e21"
   },
   {
@@ -1378,6 +1378,58 @@
    "etiqueta": "",
    "sinStock": false,
    "foto": "fotos/2ws2mx9q1ok6l4k5a28x.jpg?v=e8f35621"
+  },
+  {
+   "id": "m8ux9el4k281cmo6zrgn",
+   "art": "3526",
+   "nombre": "Juguete dispensador de snacks small",
+   "detalle": "",
+   "precio": 11829,
+   "categoria": "Juguetes",
+   "animal": "Perros",
+   "orden": 100,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/m8ux9el4k281cmo6zrgn.jpg?v=4586ba7a"
+  },
+  {
+   "id": "8fn83xv52d7ll15k8h0u",
+   "art": "3527",
+   "nombre": "Juguete dispensador de snacks large",
+   "detalle": "",
+   "precio": 18013,
+   "categoria": "Juguetes",
+   "animal": "Perros",
+   "orden": 110,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/8fn83xv52d7ll15k8h0u.jpg?v=dcd3d931"
+  },
+  {
+   "id": "wcetcn6bmvlvx7guuvj5",
+   "art": "3528",
+   "nombre": "Juguete dispensador de snacks treat bone",
+   "detalle": "",
+   "precio": 16932,
+   "categoria": "Juguetes",
+   "animal": "Perros",
+   "orden": 120,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/wcetcn6bmvlvx7guuvj5.jpg?v=bf87e5f1"
+  },
+  {
+   "id": "aj371eofuzfczzp5iyej",
+   "art": "3529",
+   "nombre": "Juguete dispensador de snacks treat puzzle",
+   "detalle": "",
+   "precio": 21136,
+   "categoria": "Juguetes",
+   "animal": "Perros",
+   "orden": 130,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/aj371eofuzfczzp5iyej.jpg?v=10a86a5d"
   },
   {
    "id": "s090",
@@ -3029,6 +3081,71 @@
    "etiqueta": "",
    "sinStock": false,
    "foto": "fotos/n5105.jpg?v=50e38e92"
+  },
+  {
+   "id": "981qsmdw8qpz27inrxms",
+   "art": "5106",
+   "nombre": "Dogit Snack Bar medallones de pollo x 150 gr",
+   "detalle": "",
+   "precio": 6340,
+   "categoria": "Snacks y Suplementos",
+   "animal": "Perros",
+   "orden": 270,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/981qsmdw8qpz27inrxms.jpg?v=ec9336f8"
+  },
+  {
+   "id": "lrep1e08vq1tzkd0n2ya",
+   "art": "5107",
+   "nombre": "Dogit Snack Bar bites bacalao y pollo x 150 gr",
+   "detalle": "",
+   "precio": 6222,
+   "categoria": "Snacks y Suplementos",
+   "animal": "Perros",
+   "orden": 280,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/lrep1e08vq1tzkd0n2ya.jpg?v=3d5a5579"
+  },
+  {
+   "id": "g353dme6n9j3nf5f2utr",
+   "art": "5108",
+   "nombre": "Dogit Snack Bar twists torsades pollo x 6 unidades",
+   "detalle": "",
+   "precio": 4226,
+   "categoria": "Snacks y Suplementos",
+   "animal": "Perros",
+   "orden": 290,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/g353dme6n9j3nf5f2utr.jpg?v=ba61b45e"
+  },
+  {
+   "id": "16z3fkkpgq0aes1o3lcf",
+   "art": "5109",
+   "nombre": "Dogit Snack Bar roll envuelto en pollo x2 unidades",
+   "detalle": "",
+   "precio": 3874,
+   "categoria": "Snacks y Suplementos",
+   "animal": "Perros",
+   "orden": 300,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/16z3fkkpgq0aes1o3lcf.jpg?v=55212e08"
+  },
+  {
+   "id": "wfol82radzlf5u0p1y78",
+   "art": "5110",
+   "nombre": "Dogit Snack Bar donuts envueltas en pollo x2 unidades",
+   "detalle": "",
+   "precio": 6516,
+   "categoria": "Snacks y Suplementos",
+   "animal": "Perros",
+   "orden": 310,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/wfol82radzlf5u0p1y78.jpg?v=b34bba36"
   }
  ]
 }
