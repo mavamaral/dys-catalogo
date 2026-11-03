@@ -36,6 +36,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font:500 15px/1.45 var(--
 button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+html{scroll-padding-bottom:calc(var(--bar-h) + 12px)}
 .wrap{max-width:1100px;margin:0 auto;padding:0 16px calc(40px + var(--bar-h))}
 
 /* Encabezado */
@@ -44,6 +45,8 @@ button{cursor:pointer}
 .top h1{margin:10px 0 0;font:700 clamp(24px,6vw,40px)/1.15 var(--f-display);text-wrap:balance}
 .top h1 span{color:var(--sky)}
 .updated{margin:4px 0 0;color:var(--muted);font-weight:700;font-size:14px}
+.vend{margin:6px 0 0;padding:4px 12px;border-radius:999px;background:var(--sky-soft);color:var(--muted);font:700 13px var(--f-ui)}
+.vend b{color:var(--blue);font-weight:800}
 
 /* Barra de filtros fija */
 .tools{position:sticky;top:0;z-index:5;background:var(--paper);padding:8px 0 6px;margin:0 -16px;padding-inline:16px;border-bottom:1px solid transparent;transition:border-color .2s}
@@ -114,6 +117,9 @@ button{cursor:pointer}
 .cartbar{position:fixed;left:0;right:0;bottom:0;z-index:8;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,rgba(238,244,252,.95) 30%)}
 .cartbar button{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:620px;margin:0 auto;border:0;border-radius:999px;background:var(--ink);color:#fff;padding:14px 18px;font:800 15px var(--f-ui);box-shadow:0 8px 22px rgba(19,38,92,.35)}
 .cartbar b{font-weight:900}
+.cartbar .info{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;text-align:left;line-height:1.2}
+.cartbar small{font:700 12px var(--f-ui);color:#c3d3f2}
+.cartbar small.ok{color:#8fe3ad}
 .cartbar .go{margin-left:auto;background:var(--sky);border-radius:999px;padding:4px 12px;font-weight:900;white-space:nowrap}
 
 /* Resumen del pedido */
@@ -138,10 +144,12 @@ button{cursor:pointer}
 .line .sub{font:900 14px var(--f-ui);font-variant-numeric:tabular-nums}
 .total{display:flex;justify-content:space-between;align-items:baseline;margin:14px 2px 2px;font:900 19px var(--f-ui)}
 .total small{display:block;font:600 12px var(--f-ui);color:var(--muted)}
+.min{margin:6px 2px 0;text-align:right;font:700 13px var(--f-ui);color:var(--muted)}
+.min.ok{color:var(--wa-dark)}
 .form{display:grid;gap:12px;margin:18px 0 8px}
 .form label{display:flex;flex-direction:column;gap:5px;font:800 13px var(--f-ui)}
 .form label em{font-style:normal;font-weight:600;color:var(--muted)}
-.form input[type=text],.form textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:16px}
+.form input[type=text],.form input[type=tel],.form textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:16px}
 .form textarea{min-height:70px;resize:vertical}
 .form .bad{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;border:0;margin:0;padding:0}
@@ -155,10 +163,11 @@ button{cursor:pointer}
 .panel footer{padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
 .wa{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:999px;background:var(--wa);color:#fff;padding:15px;font:900 16px var(--f-ui);box-shadow:0 6px 16px rgba(26,158,75,.35)}
 .wa:active{background:var(--wa-dark)}
+.wa[disabled]{background:#b9c0cc;box-shadow:none;cursor:not-allowed}
 .wa svg{width:22px;height:22px;fill:#fff;flex:none}
 .link{border:0;background:none;color:var(--muted);font:700 13px var(--f-ui);text-decoration:underline;padding:4px;align-self:center}
 .link.armed{color:var(--red)}
-.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:999px;font:800 14px var(--f-ui);z-index:30;max-width:calc(100% - 32px);text-align:center}
+.toast{position:fixed;left:50%;bottom:calc(var(--bar-h) + 16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:999px;font:800 14px var(--f-ui);z-index:30;max-width:calc(100% - 32px);text-align:center}
 body.lock{overflow:hidden}
 </style>
 </head>
@@ -168,6 +177,7 @@ body.lock{overflow:hidden}
     <img src="assets/logo.png" alt="DYS Online" width="278" height="109">
     <h1>Pedidos <span>mayoristas</span></h1>
     <p class="updated" id="updated">&nbsp;</p>
+    <p class="vend" id="vend" hidden>Te atiende: <b id="vendName"></b></p>
   </header>
 
   <div id="toolsAnchor"></div>
@@ -201,7 +211,7 @@ body.lock{overflow:hidden}
 </div>
 
 <div class="cartbar" id="cartbar" hidden>
-  <button type="button" id="openCart"><span>🛒 <b id="cbN">0</b> <span id="cbWord">productos</span> · <b id="cbT">$0</b></span><span class="go">Ver pedido</span></button>
+  <button type="button" id="openCart"><span class="info"><span>🛒 <b id="cbN">0</b> <span id="cbWord">productos</span> · <b id="cbT">$0</b></span><small id="cbMin"></small></span><span class="go">Ver pedido</span></button>
 </div>
 
 <div class="sheet" id="sheet" hidden>
@@ -213,9 +223,16 @@ body.lock{overflow:hidden}
     <div class="body">
       <ul class="lines" id="lines"></ul>
       <div class="total"><span>Total aprox.<small>Precios sin IVA</small></span><span id="sumT">$0</span></div>
+      <p class="min" id="minMsg" aria-live="polite"></p>
       <form class="form" id="form" novalidate>
         <label>Nombre / Comercio
           <input type="text" id="fNombre" autocomplete="organization" maxlength="80">
+        </label>
+        <label>CUIT
+          <input type="text" id="fCuit" inputmode="numeric" autocomplete="off" maxlength="16" placeholder="20-12345678-3">
+        </label>
+        <label>Teléfono
+          <input type="tel" id="fTelefono" autocomplete="tel" maxlength="30" placeholder="11 1234-5678">
         </label>
         <label>Localidad
           <input type="text" id="fLocalidad" autocomplete="address-level2" maxlength="60">
@@ -225,6 +242,9 @@ body.lock{overflow:hidden}
           <label><input type="radio" name="entrega" value="Retira">Retiro</label>
           <label><input type="radio" name="entrega" value="Envío">Envío</label>
         </fieldset>
+        <label id="dirWrap" hidden>Dirección de entrega
+          <input type="text" id="fDireccion" autocomplete="street-address" maxlength="120" placeholder="Calle, número, piso/local">
+        </label>
         <label><span>Comentario <em>(opcional)</em></span>
           <textarea id="fComentario" maxlength="400" placeholder="Horario, forma de pago, otra consulta…"></textarea>
         </label>
@@ -232,7 +252,7 @@ body.lock{overflow:hidden}
       </form>
     </div>
     <footer>
-      <button class="wa" type="button" id="send">
+      <button class="wa" type="button" id="send" disabled>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.3Z"/></svg>
         Enviar pedido por WhatsApp
       </button>
@@ -246,22 +266,32 @@ body.lock{overflow:hidden}
 <script>
 (() => {
   "use strict";
-  const PHONE = "5491165666568";
+  const MIN_ORDER = 200000;
+  const GENERAL = { nombre: "DYS Online", whatsapp: "5491165666568" };
   const ORDER = {
     Perros: ["Colchones y fundas (lisos)", "Colchones y fundas (estampados)", "Mantas Polar", "Correas", "Collares y Pretales", "Bozales", "Comederos y bebederos", "Fuentes y filtros", "Juguetes", "Peluquería", "Higiene", "Transportadoras y viaje", "Snacks y Suplementos"],
     Gatos: ["Mantas y Camas", "Juguetes y rascadores", "Comederos, bebederos y fuentes", "Filtros", "Transportadoras", "Peluquería", "Literas y accesorios", "Piedras y arenas sanitarias", "Alimentos", "Snacks y Suplementos"]
   };
   const PAW = '<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="66" rx="23" ry="20"/><ellipse cx="20" cy="38" rx="10" ry="12"/><ellipse cx="39" cy="22" rx="10" ry="13"/><ellipse cx="61" cy="22" rx="10" ry="13"/><ellipse cx="80" cy="38" rx="10" ry="12"/></svg>';
-  const CART_KEY = "dys-pedido-v1", CLIENT_KEY = "dys-cliente-v1";
+  const CART_KEY = "dys-pedido-v1", CLIENT_KEY = "dys-cliente-v1", SELLER_KEY = "dys-vendedor-v1";
 
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const fmt = n => Math.round(Number(n) || 0).toLocaleString("es-AR");
-  const norm = s => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const norm = s => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   const store = {
     get(k, d){ try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch (e){ return d; } },
     set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch (e){} }
   };
+
+  const digits = s => String(s ?? "").replace(/\D/g, "");
+  const fmtCuit = d => d.length === 11 ? d.slice(0, 2) + "-" + d.slice(2, 10) + "-" + d.slice(10) : d;
+  const cuitOk = s => /^[\d\s.-]+$/.test(s) && digits(s).length === 11;
+
+  /* Vendedor: ?v=codigo lo fija (y reemplaza al guardado); sin parámetro se usa el guardado */
+  let sellerCode = (new URLSearchParams(location.search).get("v") || "").trim().toLowerCase();
+  if (sellerCode) store.set(SELLER_KEY, sellerCode); else sellerCode = String(store.get(SELLER_KEY, "") || "");
+  let seller = { ...GENERAL, propio: false };
 
   const state = { animal: "Perros", cat: "Todas", q: "", products: [], byId: new Map() };
   let cart = store.get(CART_KEY, {});
@@ -376,6 +406,9 @@ body.lock{overflow:hidden}
     $("#cbN").textContent = n;
     $("#cbWord").textContent = n === 1 ? "producto" : "productos";
     $("#cbT").textContent = "$" + fmt(t);
+    const falta = MIN_ORDER - t;
+    $("#cbMin").textContent = falta > 0 ? "Faltan $" + fmt(falta) + " para el mínimo" : "✓ Pedido mínimo alcanzado";
+    $("#cbMin").classList.toggle("ok", falta <= 0);
     const h = n ? $("#cartbar").offsetHeight : 0;
     document.documentElement.style.setProperty("--bar-h", h + "px");
   }
@@ -400,17 +433,29 @@ body.lock{overflow:hidden}
         '<div class="info"><div class="n">' + esc(p.nombre) + '</div><div class="d">ART. ' + esc(p.art) + (p.detalle ? " · " + esc(p.detalle) : "") + '</div><div class="p">$' + fmt(p.precio) + " c/u</div></div>" +
         '<div class="right">' + stepperHTML(p, q) + '<span class="sub">$' + fmt(p.precio * q) + "</span></div></li>").join("")
       : '<li class="empty" style="margin:0"><strong>Tu pedido está vacío</strong>Agregá productos desde el catálogo.</li>';
-    $("#sumT").textContent = "$" + fmt(totals().t);
+    updateMin(totals().t);
     if (keepFocusId){
       const inp = $('#lines .line[data-id="' + CSS.escape(keepFocusId) + '"] input');
       if (inp){ inp.focus(); const v = inp.value; inp.value = ""; inp.value = v; }
     }
   }
+  function updateMin(t){
+    const falta = MIN_ORDER - t, ok = falta <= 0;
+    $("#sumT").textContent = "$" + fmt(t);
+    const m = $("#minMsg");
+    m.classList.toggle("ok", ok);
+    m.textContent = ok ? "✓ Llegaste al pedido mínimo de $" + fmt(MIN_ORDER) : "Te faltan $" + fmt(falta) + " para llegar al mínimo de $" + fmt(MIN_ORDER);
+    $("#send").disabled = !ok;
+    if (!ok) $("#err").hidden = true;
+  }
+  const FIELDS = { nombre: "#fNombre", cuit: "#fCuit", telefono: "#fTelefono", localidad: "#fLocalidad", direccion: "#fDireccion", comentario: "#fComentario" };
+  const entrega = () => { const r = document.querySelector('input[name="entrega"]:checked'); return r ? r.value : ""; };
+  function syncDireccion(){ $("#dirWrap").hidden = entrega() !== "Envío"; }
   function openSheet(){
-    const c = store.get(CLIENT_KEY, {});
-    $("#fNombre").value = c.nombre || "";
-    $("#fLocalidad").value = c.localidad || "";
+    const c = store.get(CLIENT_KEY, {}) || {};
+    for (const [k, sel] of Object.entries(FIELDS)) $(sel).value = c[k] || "";
     document.querySelectorAll('input[name="entrega"]').forEach(r => { r.checked = r.value === c.entrega; });
+    syncDireccion();
     $("#err").hidden = true;
     renderSheet();
     $("#sheet").hidden = false;
@@ -424,38 +469,48 @@ body.lock{overflow:hidden}
     $("#openCart").focus();
   }
   function saveClient(){
-    const r = document.querySelector('input[name="entrega"]:checked');
-    store.set(CLIENT_KEY, { nombre: $("#fNombre").value.trim(), localidad: $("#fLocalidad").value.trim(), entrega: r ? r.value : "" });
+    const c = { entrega: entrega() };
+    for (const [k, sel] of Object.entries(FIELDS)) c[k] = $(sel).value.trim();
+    store.set(CLIENT_KEY, c);
   }
 
   function buildMessage(){
     const lines = cartLines();
-    const r = document.querySelector('input[name="entrega"]:checked');
-    const com = $("#fComentario").value.trim();
+    const val = sel => $(sel).value.trim();
+    const ent = entrega();
     let m = "Hola! Quiero hacer este pedido:\n";
     m += lines.map(({ p, q }) => "• " + q + " × ART. " + p.art + " – " + [p.nombre, p.detalle].filter(Boolean).join(" ") + " – $" + fmt(p.precio) + " c/u").join("\n");
     m += "\nTotal aprox.: $" + fmt(totals().t) + " (precios sin IVA)";
-    m += "\nNombre: " + $("#fNombre").value.trim() + " · Localidad: " + $("#fLocalidad").value.trim() + " · " + (r ? r.value : "");
-    if (com) m += "\nComentario: " + com;
+    m += "\nNombre / Comercio: " + val("#fNombre");
+    m += "\nCUIT: " + fmtCuit(digits(val("#fCuit")));
+    m += "\nTeléfono: " + val("#fTelefono");
+    m += "\nLocalidad: " + val("#fLocalidad");
+    m += "\nEntrega: " + (ent === "Envío" ? "Envío" : "Retira en el local");
+    if (ent === "Envío") m += "\nDirección: " + val("#fDireccion");
+    if (val("#fComentario")) m += "\nComentario: " + val("#fComentario");
+    if (seller.propio) m += "\nVendedor: " + seller.nombre;
     m += "\n(Pedido armado desde el catálogo online)";
     return m;
   }
   function validate(){
     const bad = [];
-    const f = [["#fNombre", "tu nombre o comercio"], ["#fLocalidad", "la localidad"]];
-    for (const [sel, label] of f){
-      const el = $(sel), ok = !!el.value.trim();
-      el.classList.toggle("bad", !ok);
-      if (!ok) bad.push(label);
-    }
-    const ent = !!document.querySelector('input[name="entrega"]:checked');
+    const check = (sel, label, ok) => { $(sel).classList.toggle("bad", !ok); if (!ok) bad.push(label); };
+    const val = sel => $(sel).value.trim();
+    check("#fNombre", "tu nombre o comercio", !!val("#fNombre"));
+    check("#fCuit", "el CUIT (11 números)", cuitOk(val("#fCuit")));
+    check("#fTelefono", "el teléfono", digits(val("#fTelefono")).length >= 8);
+    check("#fLocalidad", "la localidad", !!val("#fLocalidad"));
+    const ent = entrega();
     $("#fEntrega").classList.toggle("bad", !ent);
     if (!ent) bad.push("si retirás o es envío");
+    if (ent === "Envío") check("#fDireccion", "la dirección de entrega", !!val("#fDireccion"));
+    else $("#fDireccion").classList.remove("bad");
     if (!cartLines().length){ $("#err").textContent = "Tu pedido está vacío."; $("#err").hidden = false; return false; }
+    if (totals().t < MIN_ORDER) return false;
     if (bad.length){
       $("#err").textContent = "Completá " + bad.join(", ").replace(/, ([^,]*)$/, " y $1") + ".";
       $("#err").hidden = false;
-      const first = document.querySelector(".form .bad input, .form input.bad");
+      const first = document.querySelector(".form input.bad, .form .seg.bad input");
       if (first) first.focus();
       return false;
     }
@@ -464,13 +519,16 @@ body.lock{overflow:hidden}
   }
   function send(){
     if (!validate()) return;
+    $("#fCuit").value = fmtCuit(digits($("#fCuit").value));
     saveClient();
+    const PHONE = seller.whatsapp;
     const text = encodeURIComponent(buildMessage());
     const mobile = /Android|iPhone|iPad|iPod|Mobile|Opera Mini|IEMobile/i.test(navigator.userAgent) ||
       (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
     const url = mobile ? "https://wa.me/" + PHONE + "?text=" + text : "https://web.whatsapp.com/send?phone=" + PHONE + "&text=" + text;
-    const w = window.open(url, "_blank", "noopener");
-    if (!w) location.href = url;
+    // Sin "noopener" en window.open: con esa opción devuelve null siempre y no se puede saber si la bloquearon
+    const w = window.open(url, "_blank");
+    if (w) { try { w.opener = null; } catch (e){} } else location.href = url;
   }
   let armTimer = 0;
   function disarmEmpty(){ clearTimeout(armTimer); const b = $("#empty"); b.classList.remove("armed"); b.textContent = "Vaciar pedido"; }
@@ -541,8 +599,9 @@ body.lock{overflow:hidden}
   $("#sheet").addEventListener("click", e => { if (e.target === e.currentTarget) closeSheet(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#sheet").hidden) closeSheet(); });
   $("#send").addEventListener("click", send);
-  ["#fNombre", "#fLocalidad"].forEach(s => $(s).addEventListener("input", e => { e.target.classList.remove("bad"); $("#err").hidden = true; saveClient(); }));
-  $("#fEntrega").addEventListener("change", () => { $("#fEntrega").classList.remove("bad"); $("#err").hidden = true; saveClient(); });
+  Object.values(FIELDS).forEach(s => $(s).addEventListener("input", e => { e.target.classList.remove("bad"); $("#err").hidden = true; saveClient(); }));
+  $("#fCuit").addEventListener("blur", e => { const d = digits(e.target.value); if (cuitOk(e.target.value)) { e.target.value = fmtCuit(d); saveClient(); } });
+  $("#fEntrega").addEventListener("change", () => { $("#fEntrega").classList.remove("bad"); $("#err").hidden = true; syncDireccion(); saveClient(); });
   $("#empty").addEventListener("click", () => {
     const b = $("#empty");
     if (!b.classList.contains("armed")){
@@ -564,10 +623,24 @@ body.lock{overflow:hidden}
     render(); updateBar();
   });
   window.addEventListener("resize", updateBar);
+  if ("ResizeObserver" in window) new ResizeObserver(() => { if (!$("#cartbar").hidden) document.documentElement.style.setProperty("--bar-h", $("#cartbar").offsetHeight + "px"); }).observe($("#cartbar"));
   const io = new IntersectionObserver(([en]) => $("#tools").classList.toggle("stuck", en.intersectionRatio < 1), { threshold: [1], rootMargin: "-1px 0px 0px 0px" });
   io.observe($("#tools"));
 
   /* ---------- carga ---------- */
+  fetch("vendedores.json", { cache: "no-cache" })
+    .then(r => r.ok ? r.json() : null)
+    .catch(() => null)
+    .then(cfg => {
+      const valid = x => x && typeof x === "object" && digits(x.whatsapp).length >= 10;
+      const gen = cfg && valid(cfg.general) ? cfg.general : GENERAL;
+      const list = cfg && Array.isArray(cfg.vendedores) ? cfg.vendedores : [];
+      const v = sellerCode && list.find(x => valid(x) && String(x.codigo || "").trim().toLowerCase() === sellerCode);
+      seller = v ? { nombre: String(v.nombre || "").trim() || GENERAL.nombre, whatsapp: digits(v.whatsapp), propio: true }
+                 : { nombre: String(gen.nombre || GENERAL.nombre), whatsapp: digits(gen.whatsapp), propio: false };
+      $("#vendName").textContent = seller.nombre;
+      $("#vend").hidden = !seller.propio;
+    });
   function fmtDate(iso){
     const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || "");
     return m ? m[3] + "/" + m[2] + "/" + m[1] : "";

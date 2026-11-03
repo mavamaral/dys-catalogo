@@ -10,7 +10,48 @@ Se publica con GitHub Pages en **https://mayoristas.dysonline.com.ar**.
 | `fotos/` | Fotos JPG de ~600 px, una por producto (`<id>.jpg`); `fuentes.json` es interno del script |
 | `assets/` | Logo e íconos de contacto |
 | `scripts/sync.py` | Regenera `productos.json` y `fotos/` desde la base del artefacto |
+| `vendedores.json` | Vendedores y sus WhatsApp (se edita a mano; la sincronización no lo toca) |
 | `CNAME` | Dominio propio para GitHub Pages |
+
+## Links por vendedor
+
+| Link | El pedido llega a |
+|---|---|
+| https://mayoristas.dysonline.com.ar/ | DYS Online (11 6566-6568) |
+| https://mayoristas.dysonline.com.ar/?v=leandro-varela | Leandro Varela |
+| https://mayoristas.dysonline.com.ar/?v=daniel-saracchi | Daniel Saracchi |
+
+El navegador del cliente recuerda el vendedor: si después entra sin `?v=`, el pedido
+sigue yendo al mismo vendedor. Si entra con otro `?v=`, se reemplaza. Un código que no
+existe en `vendedores.json` manda el pedido al número general.
+
+### Cómo agregar, editar o borrar un vendedor
+
+Editá `vendedores.json` en GitHub (abrí el archivo → ícono del lápiz → *Commit changes*):
+
+```json
+{
+  "general": { "nombre": "DYS Online", "whatsapp": "5491165666568" },
+  "vendedores": [
+    { "codigo": "leandro-varela", "nombre": "Leandro Varela", "whatsapp": "5491153232875" },
+    { "codigo": "daniel-saracchi", "nombre": "Daniel Saracchi", "whatsapp": "5491131594583" }
+  ]
+}
+```
+
+- **Agregar:** copiá una línea de `vendedores`, cambiá los tres datos y separala con una coma
+  de la anterior (la última línea va sin coma). El link es `https://mayoristas.dysonline.com.ar/?v=<codigo>`.
+- **Editar:** cambiá `nombre` o `whatsapp`. Si cambiás el `codigo`, el link viejo deja de andar.
+- **Borrar:** eliminá la línea (y la coma que sobre). Sus clientes pasan al número general.
+- `codigo`: minúsculas, sin espacios ni acentos (usá guiones). `whatsapp`: 549 + código de área sin 0 + número sin 15, todo junto.
+- Los cambios se ven en uno o dos minutos. Si el archivo queda mal escrito, todos los pedidos van al número general:
+  podés revisarlo pegándolo en https://jsonlint.com.
+
+## Pedido
+
+- Pedido mínimo: **$200.000 sin IVA** (`MIN_ORDER` en `index.html`). Hasta llegar, el botón de WhatsApp queda desactivado.
+- Datos obligatorios: Nombre/Comercio, CUIT (11 números), Teléfono, Localidad, Retira/Envío y,
+  si es Envío, Dirección. Se guardan en el navegador para el próximo pedido.
 
 ## Cómo se actualiza
 
