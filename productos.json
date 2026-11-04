@@ -1,12 +1,12 @@
 {
- "actualizado": "2026-11-03",
+ "actualizado": "2026-11-04",
  "productos": [
   {
    "id": "s01",
    "art": "2102",
    "nombre": "Colchón de Tela Lisa Antidesgarro",
    "detalle": "1,10 x 0,70 x 0,12 (copos)",
-   "precio": 25526,
+   "precio": 25500,
    "categoria": "Colchones y fundas (lisos)",
    "animal": "Perros",
    "orden": 10,
