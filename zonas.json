@@ -1,0 +1,15 @@
+{
+  "minimos": {
+    "CABA": 200000,
+    "1er cordón": 250000,
+    "2do cordón": 300000,
+    "3er cordón": 350000,
+    "Otra localidad": 400000
+  },
+  "localidades": [
+    { "nombre": "CABA", "cordon": "CABA" },
+    { "nombre": "Lomas de Zamora", "cordon": "1er cordón" },
+    { "nombre": "Quilmes", "cordon": "2do cordón" },
+    { "nombre": "Pilar", "cordon": "3er cordón" }
+  ]
+}

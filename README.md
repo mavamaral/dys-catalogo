@@ -11,6 +11,7 @@ Se publica con GitHub Pages en **https://mayoristas.dysonline.com.ar**.
 | `assets/` | Logo e ícono de la dirección |
 | `scripts/sync.py` | Regenera `productos.json` y `fotos/` desde la base del artefacto |
 | `vendedores.json` | Vendedores y sus WhatsApp (se edita a mano; la sincronización no lo toca) |
+| `zonas.json` | Localidades, cordones y pedido mínimo de cada cordón (se edita a mano; la publicación del catálogo no lo toca) |
 | `CNAME` | Dominio propio para GitHub Pages |
 
 ## Links por vendedor
@@ -49,9 +50,49 @@ Editá `vendedores.json` en GitHub (abrí el archivo → ícono del lápiz → *
 
 ## Pedido
 
-- Pedido mínimo: **$200.000 sin IVA** (`MIN_ORDER` en `index.html`). Hasta llegar, el botón de WhatsApp queda desactivado.
-- Datos obligatorios: Nombre/Comercio, CUIT (11 números), Teléfono, Localidad, Retira/Envío y,
-  si es Envío, Dirección. Se guardan en el navegador para el próximo pedido.
+- Pedido mínimo **según la localidad del cliente** (sin IVA), configurado en `zonas.json`.
+  La primera vez que entra, la página pregunta "¿Dónde está tu comercio?" y guarda la respuesta
+  en el navegador; arriba se ve "📍 Localidad · Pedido mínimo $X · Cambiar". Hasta llegar al
+  mínimo, el botón de WhatsApp queda desactivado.
+- Datos obligatorios: Nombre/Comercio, CUIT (11 números), Teléfono, Localidad (si eligió
+  "Otra localidad", también su nombre), Retira/Envío y, si es Envío, Dirección. Se guardan en el
+  navegador para el próximo pedido.
+- Si `zonas.json` no se puede leer, la página no pregunta la localidad, pide escribirla a mano y
+  usa un mínimo de $200.000 (`FALLBACK_MIN` en `index.html`).
+
+### Cómo editar zonas.json
+
+Editalo en GitHub (abrí el archivo → ícono del lápiz → *Commit changes*):
+
+```json
+{
+  "minimos": {
+    "CABA": 200000,
+    "1er cordón": 250000,
+    "2do cordón": 300000,
+    "3er cordón": 350000,
+    "Otra localidad": 400000
+  },
+  "localidades": [
+    { "nombre": "CABA", "cordon": "CABA" },
+    { "nombre": "Lomas de Zamora", "cordon": "1er cordón" },
+    { "nombre": "Quilmes", "cordon": "2do cordón" },
+    { "nombre": "Pilar", "cordon": "3er cordón" }
+  ]
+}
+```
+
+- **Cambiar un mínimo:** cambiá el número en `minimos` (sin puntos ni `$`: `250000`). Con `0`, esa
+  zona no tiene mínimo ("Sin pedido mínimo").
+- **Agregar una localidad:** copiá una línea de `localidades`, cambiá `nombre` y `cordon`, y
+  separala con una coma de la anterior (la última va sin coma). `cordon` tiene que estar escrito
+  igual que en `minimos` (con tilde: `cordón`). El buscador ignora mayúsculas y tildes.
+- **Borrar una localidad:** eliminá su línea (y la coma que sobre). Los clientes que la tenían
+  elegida vuelven a ver la pregunta de localidad.
+- **"Otra localidad"** es la opción del final de la lista: no se agrega en `localidades`, solo
+  necesita su monto en `minimos`.
+- Los cambios se ven en uno o dos minutos. Si el archivo queda mal escrito, la página usa el
+  mínimo de respaldo: revisalo pegándolo en https://jsonlint.com.
 
 ## Cómo publicar cambios
 

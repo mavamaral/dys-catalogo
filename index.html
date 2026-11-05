@@ -167,6 +167,30 @@ html{scroll-padding-bottom:calc(var(--bar-h) + 12px)}
 .wa svg{width:22px;height:22px;fill:#fff;flex:none}
 .link{border:0;background:none;color:var(--muted);font:700 13px var(--f-ui);text-decoration:underline;padding:4px;align-self:center}
 .link.armed{color:var(--red)}
+/* Localidad / pedido mínimo por zona */
+.zona{display:flex;align-items:center;justify-content:center;gap:4px 6px;flex-wrap:wrap;max-width:620px;margin:0 auto 8px;padding:6px 12px;border-radius:12px;background:var(--card);box-shadow:0 2px 8px rgba(19,38,92,.08);font:700 13px/1.3 var(--f-ui);text-align:center}
+.zona b{font-weight:900}
+.zona button{border:0;background:none;color:var(--blue);font:800 13px var(--f-ui);text-decoration:underline;padding:2px 2px}
+.cartbar .prog{display:block;width:100%;min-width:150px;height:5px;border-radius:5px;background:rgba(255,255,255,.2);overflow:hidden;margin-top:2px}
+.cartbar .prog i{display:block;height:100%;width:0;background:var(--sky);border-radius:5px;transition:width .25s}
+.cartbar .prog.ok i{background:#8fe3ad}
+.zmodal{position:fixed;inset:0;z-index:40;background:rgba(19,38,92,.55);display:flex;align-items:flex-start;justify-content:center;padding:max(24px,env(safe-area-inset-top,0px)) 16px 16px;overflow-y:auto}
+.zpanel{position:relative;background:var(--paper);width:100%;max-width:440px;border-radius:22px;padding:22px 18px 18px;box-shadow:0 20px 50px rgba(0,0,0,.3);text-align:center}
+.zpanel img{height:56px;width:auto}
+.zpanel h2{margin:10px 0 4px;font:700 22px/1.2 var(--f-display)}
+.zpanel p{margin:0 0 14px;color:var(--muted);font-size:14px}
+.zpanel .x{position:absolute;top:12px;right:12px}
+.zsearch{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:16px;-webkit-appearance:none;appearance:none}
+.zlist{list-style:none;margin:10px 0 0;padding:0;text-align:left;display:flex;flex-direction:column;gap:6px;max-height:min(50vh,360px);overflow-y:auto}
+.zlist button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 14px;font:800 15px var(--f-ui);color:var(--ink);text-align:left}
+.zlist button small{font:700 12px var(--f-ui);color:var(--muted);white-space:nowrap}
+.zlist button:hover,.zlist button.cur{border-color:var(--blue)}
+.zlist li.otra button{background:var(--sky-soft)}
+.zlist li.none{color:var(--muted);font-size:13px;padding:2px 4px}
+.form .field{display:flex;flex-direction:column;gap:5px;font:800 13px var(--f-ui)}
+.pick{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;font:700 16px var(--f-ui);color:var(--ink);text-align:left}
+.pick span{color:var(--blue);font:800 13px var(--f-ui);text-decoration:underline;white-space:nowrap}
+.pick small{font:700 12px var(--f-ui);color:var(--muted)}
 .toast{position:fixed;left:50%;bottom:calc(var(--bar-h) + 16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:999px;font:800 14px var(--f-ui);z-index:30;max-width:calc(100% - 32px);text-align:center}
 body.lock{overflow:hidden}
 </style>
@@ -182,6 +206,7 @@ body.lock{overflow:hidden}
 
   <div id="toolsAnchor"></div>
   <div class="tools" id="tools">
+    <div class="zona" id="zona" hidden>📍 <b id="zNombre"></b> · <span id="zMin"></span> · <button type="button" id="zCambiar">Cambiar</button></div>
     <div class="tabs" role="group" aria-label="Elegir animal">
       <button class="tab" type="button" data-animal="Perros" aria-pressed="true">Perros</button>
       <button class="tab" type="button" data-animal="Gatos" aria-pressed="false">Gatos</button>
@@ -209,7 +234,7 @@ body.lock{overflow:hidden}
 </div>
 
 <div class="cartbar" id="cartbar" hidden>
-  <button type="button" id="openCart"><span class="info"><span>🛒 <b id="cbN">0</b> <span id="cbWord">productos</span> · <b id="cbT">$0</b></span><small id="cbMin"></small></span><span class="go">Ver pedido</span></button>
+  <button type="button" id="openCart"><span class="info"><span>🛒 <b id="cbN">0</b> <span id="cbWord">productos</span> · <b id="cbT">$0</b></span><small id="cbMin"></small><span class="prog" id="cbProg" aria-hidden="true"><i></i></span></span><span class="go">Ver pedido</span></button>
 </div>
 
 <div class="sheet" id="sheet" hidden>
@@ -232,8 +257,11 @@ body.lock{overflow:hidden}
         <label>Teléfono
           <input type="tel" id="fTelefono" autocomplete="tel" maxlength="30" placeholder="11 1234-5678">
         </label>
-        <label>Localidad
-          <input type="text" id="fLocalidad" autocomplete="address-level2" maxlength="60">
+        <div class="field" id="locWrap">Localidad
+          <button type="button" class="pick" id="fLocalidad"><b id="fLocNombre">Elegí tu localidad</b><span>Cambiar</span></button>
+        </div>
+        <label id="otraWrap" hidden>¿Cuál es tu localidad?
+          <input type="text" id="fOtraLocalidad" autocomplete="address-level2" maxlength="60">
         </label>
         <fieldset class="seg" id="fEntrega">
           <legend>¿Retirás o te lo enviamos?</legend>
@@ -259,12 +287,24 @@ body.lock{overflow:hidden}
   </div>
 </div>
 
+<div class="zmodal" id="zmodal" hidden>
+  <div class="zpanel" role="dialog" aria-modal="true" aria-labelledby="zTitle">
+    <button class="x" type="button" id="zClose" aria-label="Cerrar" hidden>✕</button>
+    <img src="assets/logo.png" alt="DYS Online" width="278" height="109">
+    <h2 id="zTitle">¿Dónde está tu comercio?</h2>
+    <p>Así te mostramos el pedido mínimo de tu zona.</p>
+    <input class="zsearch" id="zq" type="search" placeholder="Escribí tu localidad" autocomplete="off" enterkeyhint="done" aria-label="Buscar localidad" aria-controls="zlist">
+    <ul class="zlist" id="zlist"></ul>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script>
 (() => {
   "use strict";
-  const MIN_ORDER = 200000;
+  const FALLBACK_MIN = 200000; // si zonas.json no carga
+  const OTRA = "Otra localidad", ZONE_KEY = "dys-zona-v1";
   const GENERAL = { nombre: "DYS Online", whatsapp: "5491165666568" };
   const ORDER = {
     Perros: ["Colchones y fundas (lisos)", "Colchones y fundas (estampados)", "Mantas Polar", "Correas", "Collares y Pretales", "Bozales", "Comederos y bebederos", "Fuentes y filtros", "Juguetes", "Peluquería", "Higiene", "Transportadoras y viaje", "Snacks y Suplementos"],
@@ -290,6 +330,15 @@ body.lock{overflow:hidden}
   const sellerCode = (new URLSearchParams(location.search).get("v") || "").trim().toLowerCase();
   try { localStorage.removeItem("dys-vendedor-v1"); } catch (e){} // limpia el vendedor que guardaba la versión anterior
   let seller = { ...GENERAL, propio: false };
+
+  /* Zona: localidad elegida por el cliente → cordón → pedido mínimo (zonas.json) */
+  let zonas = null;  // { minimos: {cordón: monto}, localidades: [{nombre, cordon}] }
+  let zona = null;   // { nombre, cordon, otra }
+  function minimo(){
+    if (!zonas || !zona) return FALLBACK_MIN;
+    const m = Number(zonas.minimos[zona.cordon] ?? zonas.minimos[OTRA]);
+    return Number.isFinite(m) && m >= 0 ? m : FALLBACK_MIN;
+  }
 
   const state = { animal: "Perros", cat: "Todas", q: "", products: [], byId: new Map() };
   /* El pedido vive solo en esta pestaña (sessionStorage): sobrevive a recargar, pero cada vez
@@ -412,9 +461,12 @@ body.lock{overflow:hidden}
     $("#cbN").textContent = n;
     $("#cbWord").textContent = n === 1 ? "producto" : "productos";
     $("#cbT").textContent = "$" + fmt(t);
-    const falta = MIN_ORDER - t;
-    $("#cbMin").textContent = falta > 0 ? "Faltan $" + fmt(falta) + " para el mínimo" : "✓ Pedido mínimo alcanzado";
+    const min = minimo(), falta = min - t;
+    $("#cbMin").textContent = min <= 0 ? "Sin pedido mínimo" : falta > 0 ? "Te faltan $" + fmt(falta) + " para el mínimo" : "✓ Llegaste al mínimo";
     $("#cbMin").classList.toggle("ok", falta <= 0);
+    $("#cbProg").hidden = min <= 0;
+    $("#cbProg").classList.toggle("ok", falta <= 0);
+    $("#cbProg i").style.width = (min > 0 ? Math.min(100, t / min * 100) : 100) + "%";
     const h = n ? $("#cartbar").offsetHeight : 0;
     document.documentElement.style.setProperty("--bar-h", h + "px");
   }
@@ -446,20 +498,22 @@ body.lock{overflow:hidden}
     }
   }
   function updateMin(t){
-    const falta = MIN_ORDER - t, ok = falta <= 0;
+    const min = minimo(), falta = min - t, ok = falta <= 0;
     $("#sumT").textContent = "$" + fmt(t);
     const m = $("#minMsg");
+    m.hidden = min <= 0;
     m.classList.toggle("ok", ok);
-    m.textContent = ok ? "✓ Llegaste al pedido mínimo de $" + fmt(MIN_ORDER) : "Te faltan $" + fmt(falta) + " para llegar al mínimo de $" + fmt(MIN_ORDER);
+    m.textContent = ok ? "✓ Llegaste al pedido mínimo de $" + fmt(min) : "Te faltan $" + fmt(falta) + " para llegar al mínimo de $" + fmt(min);
     $("#send").disabled = !ok;
     if (!ok) $("#err").hidden = true;
   }
-  const FIELDS = { nombre: "#fNombre", cuit: "#fCuit", telefono: "#fTelefono", localidad: "#fLocalidad", direccion: "#fDireccion", comentario: "#fComentario" };
+  const FIELDS = { nombre: "#fNombre", cuit: "#fCuit", telefono: "#fTelefono", otraLocalidad: "#fOtraLocalidad", direccion: "#fDireccion", comentario: "#fComentario" };
   const entrega = () => { const r = document.querySelector('input[name="entrega"]:checked'); return r ? r.value : ""; };
   function syncDireccion(){ $("#dirWrap").hidden = entrega() !== "Envío"; }
   function openSheet(){
     const c = store.get(CLIENT_KEY, {}) || {};
     for (const [k, sel] of Object.entries(FIELDS)) $(sel).value = c[k] || "";
+    if (!$("#fOtraLocalidad").value && c.localidad) $("#fOtraLocalidad").value = c.localidad; // dato de la versión anterior
     document.querySelectorAll('input[name="entrega"]').forEach(r => { r.checked = r.value === c.entrega; });
     syncDireccion();
     $("#err").hidden = true;
@@ -490,7 +544,7 @@ body.lock{overflow:hidden}
     m += "\nNombre / Comercio: " + val("#fNombre");
     m += "\nCUIT: " + fmtCuit(digits(val("#fCuit")));
     m += "\nTeléfono: " + val("#fTelefono");
-    m += "\nLocalidad: " + val("#fLocalidad");
+    m += "\nLocalidad: " + localidadTexto();
     m += "\nEntrega: " + (ent === "Envío" ? "Envío" : "Retira en el local");
     if (ent === "Envío") m += "\nDirección: " + val("#fDireccion");
     if (val("#fComentario")) m += "\nComentario: " + val("#fComentario");
@@ -505,18 +559,20 @@ body.lock{overflow:hidden}
     check("#fNombre", "tu nombre o comercio", !!val("#fNombre"));
     check("#fCuit", "el CUIT (11 números)", cuitOk(val("#fCuit")));
     check("#fTelefono", "el teléfono", digits(val("#fTelefono")).length >= 8);
-    check("#fLocalidad", "la localidad", !!val("#fLocalidad"));
+    if (!zona){ $("#fLocalidad").classList.add("bad"); bad.push("la localidad"); } else $("#fLocalidad").classList.remove("bad");
+    if (zona && zona.otra) check("#fOtraLocalidad", "el nombre de tu localidad", !!val("#fOtraLocalidad"));
+    else $("#fOtraLocalidad").classList.remove("bad");
     const ent = entrega();
     $("#fEntrega").classList.toggle("bad", !ent);
     if (!ent) bad.push("si retirás o es envío");
     if (ent === "Envío") check("#fDireccion", "la dirección de entrega", !!val("#fDireccion"));
     else $("#fDireccion").classList.remove("bad");
     if (!cartLines().length){ $("#err").textContent = "Tu pedido está vacío."; $("#err").hidden = false; return false; }
-    if (totals().t < MIN_ORDER) return false;
+    if (totals().t < minimo()) return false;
     if (bad.length){
       $("#err").textContent = "Completá " + bad.join(", ").replace(/, ([^,]*)$/, " y $1") + ".";
       $("#err").hidden = false;
-      const first = document.querySelector(".form input.bad, .form .seg.bad input");
+      const first = document.querySelector(".form input.bad, .form button.bad, .form .seg.bad input");
       if (first) first.focus();
       return false;
     }
@@ -603,7 +659,11 @@ body.lock{overflow:hidden}
   $("#openCart").addEventListener("click", openSheet);
   $("#closeCart").addEventListener("click", closeSheet);
   $("#sheet").addEventListener("click", e => { if (e.target === e.currentTarget) closeSheet(); });
-  document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#sheet").hidden) closeSheet(); });
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if (!$("#zmodal").hidden){ if (zona) closeZone(); return; }
+    if (!$("#sheet").hidden) closeSheet();
+  });
   $("#send").addEventListener("click", send);
   Object.values(FIELDS).forEach(s => $(s).addEventListener("input", e => { e.target.classList.remove("bad"); $("#err").hidden = true; saveClient(); }));
   $("#fCuit").addEventListener("blur", e => { const d = digits(e.target.value); if (cuitOk(e.target.value)) { e.target.value = fmtCuit(d); saveClient(); } });
@@ -627,6 +687,99 @@ body.lock{overflow:hidden}
   if ("ResizeObserver" in window) new ResizeObserver(() => { if (!$("#cartbar").hidden) document.documentElement.style.setProperty("--bar-h", $("#cartbar").offsetHeight + "px"); }).observe($("#cartbar"));
   const io = new IntersectionObserver(([en]) => $("#tools").classList.toggle("stuck", en.intersectionRatio < 1), { threshold: [1], rootMargin: "-1px 0px 0px 0px" });
   io.observe($("#tools"));
+
+  /* ---------- localidad ---------- */
+  const cordonLabel = z => z.otra ? OTRA : z.cordon;
+  function localidadTexto(){
+    if (!zona) return "";
+    if (zona.otra) return $("#fOtraLocalidad").value.trim() + (zonas ? " (" + OTRA + ")" : "");
+    return zona.nombre + (norm(zona.cordon) !== norm(zona.nombre) ? " (" + zona.cordon + ")" : "");
+  }
+  function resolveZone(saved){
+    if (!saved || !zonas) return null;
+    if (saved.otra) return { nombre: OTRA, cordon: OTRA, otra: true };
+    const l = zonas.localidades.find(x => norm(x.nombre) === norm(saved.nombre));
+    return l ? { nombre: l.nombre, cordon: l.cordon, otra: false } : null;
+  }
+  function updateZoneUI(){
+    const min = minimo();
+    $("#zona").hidden = !zonas || !zona;
+    if (zona){
+      $("#zNombre").textContent = zona.nombre;
+      $("#zMin").textContent = min > 0 ? "Pedido mínimo $" + fmt(min) : "Sin pedido mínimo";
+      $("#fLocNombre").innerHTML = esc(zona.nombre) + (zona.otra || norm(zona.cordon) === norm(zona.nombre) ? "" : " <small>(" + esc(zona.cordon) + ")</small>");
+    }
+    $("#locWrap").hidden = !zonas;
+    $("#otraWrap").hidden = !(zona && zona.otra);
+    updateBar();
+    if (!$("#sheet").hidden) updateMin(totals().t);
+  }
+  function setZone(z){
+    zona = z;
+    store.set(ZONE_KEY, { nombre: z.nombre, otra: !!z.otra });
+    $("#fLocalidad").classList.remove("bad");
+    updateZoneUI();
+  }
+  function renderZoneList(){
+    const q = norm($("#zq").value.trim());
+    const all = zonas.localidades;
+    const hits = (q ? all.filter(l => norm(l.nombre).includes(q)) : all.slice())
+      .sort((a, b) => q ? (norm(b.nombre).startsWith(q) - norm(a.nombre).startsWith(q)) || a.nombre.localeCompare(b.nombre, "es") : 0)
+      .slice(0, 60);
+    const cur = zona && !zona.otra ? norm(zona.nombre) : null;
+    const item = (l, i) => '<li><button type="button" data-i="' + i + '"' + (norm(l.nombre) === cur ? ' class="cur"' : "") + ">" + esc(l.nombre) +
+      (norm(l.cordon) !== norm(l.nombre) ? "<small>" + esc(l.cordon) + "</small>" : "") + "</button></li>";
+    $("#zlist").innerHTML = (hits.length ? hits.map(l => item(l, all.indexOf(l))).join("") : (q ? '<li class="none">No la encontramos. Si no está en la lista, elegí “Otra localidad”.</li>' : "")) +
+      '<li class="otra"><button type="button" data-i="otra"' + (zona && zona.otra ? ' class="cur"' : "") + ">" + OTRA + "</button></li>";
+  }
+  let zoneReturn = null;
+  function openZone(prefill){
+    if (!zonas) return;
+    zoneReturn = document.activeElement;
+    $("#zClose").hidden = !zona;  // la primera vez hay que elegir sí o sí
+    $("#zq").value = prefill || "";
+    renderZoneList();
+    $("#zmodal").hidden = false;
+    document.body.classList.add("lock");
+    $("#zq").focus();
+  }
+  function closeZone(){
+    $("#zmodal").hidden = true;
+    if ($("#sheet").hidden) document.body.classList.remove("lock");
+    if (zoneReturn && zoneReturn.focus) zoneReturn.focus();
+  }
+  $("#zq").addEventListener("input", renderZoneList);
+  $("#zq").addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); const b = $("#zlist button"); if (b) b.click(); } });
+  $("#zlist").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    const i = b.dataset.i;
+    if (i === "otra") setZone({ nombre: OTRA, cordon: OTRA, otra: true });
+    else { const l = zonas.localidades[Number(i)]; setZone({ nombre: l.nombre, cordon: l.cordon, otra: false }); }
+    closeZone();
+    if (zona.otra && !$("#sheet").hidden) $("#fOtraLocalidad").focus();
+  });
+  $("#zClose").addEventListener("click", closeZone);
+  $("#zmodal").addEventListener("click", e => { if (e.target === e.currentTarget && zona) closeZone(); });
+  $("#zCambiar").addEventListener("click", () => openZone());
+  $("#fLocalidad").addEventListener("click", () => openZone());
+
+  fetch("zonas.json", { cache: "no-cache" })
+    .then(r => r.ok ? r.json() : null)
+    .catch(() => null)
+    .then(cfg => {
+      const ok = cfg && cfg.minimos && typeof cfg.minimos === "object" && Array.isArray(cfg.localidades);
+      if (ok){
+        zonas = {
+          minimos: cfg.minimos,
+          localidades: cfg.localidades.filter(l => l && String(l.nombre || "").trim()).map(l => ({ nombre: String(l.nombre).trim(), cordon: String(l.cordon || OTRA).trim() }))
+        };
+        zona = resolveZone(store.get(ZONE_KEY, null));
+      } else {
+        zona = { nombre: "", cordon: "", otra: true };  // sin zonas: localidad a mano y mínimo fijo
+      }
+      updateZoneUI();
+      if (zonas && !zona) openZone((store.get(CLIENT_KEY, {}) || {}).localidad || "");
+    });
 
   /* ---------- carga ---------- */
   fetch("vendedores.json", { cache: "no-cache" })
