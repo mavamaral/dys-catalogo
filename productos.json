@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-04",
+ "actualizado": "2026-11-05",
  "productos": [
   {
    "id": "s01",
@@ -1779,7 +1779,7 @@
    "animal": "Gatos",
    "orden": 60,
    "etiqueta": "",
-   "sinStock": false,
+   "sinStock": true,
    "foto": "fotos/s071.jpg?v=b2b9bcfe"
   },
   {
@@ -2288,6 +2288,32 @@
    "etiqueta": "",
    "sinStock": false,
    "foto": "fotos/i18dwceulvzlryvmckwc.jpg?v=cb0fa571"
+  },
+  {
+   "id": "qlsl1z3nyw86sjbk5wj0",
+   "art": "4124",
+   "nombre": "Le Salon Cepillo de goma para almohazar 91248",
+   "detalle": "",
+   "precio": 5756,
+   "categoria": "Peluquería",
+   "animal": "Perros",
+   "orden": 160,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/qlsl1z3nyw86sjbk5wj0.jpg?v=fc3d2506"
+  },
+  {
+   "id": "9e49fespv3ynd311p4fq",
+   "art": "4125",
+   "nombre": "Le Salon Cepillo de goma para acicalar",
+   "detalle": "",
+   "precio": 4708,
+   "categoria": "Peluquería",
+   "animal": "Perros",
+   "orden": 170,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/9e49fespv3ynd311p4fq.jpg?v=6ee3ca50"
   },
   {
    "id": "s044",
