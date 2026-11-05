@@ -332,8 +332,8 @@ body.lock{overflow:hidden}
   let seller = { ...GENERAL, propio: false };
 
   /* Zona: localidad elegida por el cliente → cordón → pedido mínimo (zonas.json) */
-  let zonas = null;  // { minimos: {cordón: monto}, localidades: [{nombre, cordon}] }
-  let zona = null;   // { nombre, cordon, otra }
+  let zonas = null;  // { minimos: {cordón: monto}, localidades: [{nombre, partido, cordon}] }
+  let zona = null;   // { nombre, partido, cordon, otra } — el cordón no se muestra, solo define el mínimo
   function minimo(){
     if (!zonas || !zona) return FALLBACK_MIN;
     const m = Number(zonas.minimos[zona.cordon] ?? zonas.minimos[OTRA]);
@@ -689,19 +689,19 @@ body.lock{overflow:hidden}
   io.observe($("#tools"));
 
   /* ---------- localidad ---------- */
-  const cordonLabel = z => z.otra ? OTRA : z.cordon;
   function localidadTexto(){
     if (!zona) return "";
-    if (zona.otra) return $("#fOtraLocalidad").value.trim() + (zonas ? " (" + OTRA + ")" : "");
-    return zona.nombre + (showCordon(zona) ? " (" + zona.cordon + ")" : "");
+    if (zona.otra) return $("#fOtraLocalidad").value.trim();
+    if (norm(zona.cordon) === "caba") return "CABA";
+    return zona.nombre + (showPartido(zona) ? " (" + zona.partido + ")" : "");
   }
-  // No repetir el cordón cuando ya está en el nombre (ej. "CABA (Ciudad de Buenos Aires)")
-  const showCordon = z => !z.otra && !norm(z.nombre).includes(norm(z.cordon));
+  // El cordón no se muestra al cliente (solo define el mínimo); el partido sí, si no está ya en el nombre
+  const showPartido = z => !!z.partido && !norm(z.nombre).includes(norm(z.partido));
   function resolveZone(saved){
     if (!saved || !zonas) return null;
     if (saved.otra) return { nombre: OTRA, cordon: OTRA, otra: true };
     const l = zonas.localidades.find(x => norm(x.nombre) === norm(saved.nombre));
-    return l ? { nombre: l.nombre, cordon: l.cordon, otra: false } : null;
+    return l ? { ...l, otra: false } : null;
   }
   function updateZoneUI(){
     const min = minimo();
@@ -709,7 +709,7 @@ body.lock{overflow:hidden}
     if (zona){
       $("#zNombre").textContent = zona.nombre;
       $("#zMin").textContent = min > 0 ? "Pedido mínimo $" + fmt(min) : "Sin pedido mínimo";
-      $("#fLocNombre").innerHTML = esc(zona.nombre) + (showCordon(zona) ? " <small>(" + esc(zona.cordon) + ")</small>" : "");
+      $("#fLocNombre").textContent = zona.nombre;
     }
     $("#locWrap").hidden = !zonas;
     $("#otraWrap").hidden = !(zona && zona.otra);
@@ -725,12 +725,18 @@ body.lock{overflow:hidden}
   function renderZoneList(){
     const q = norm($("#zq").value.trim());
     const all = zonas.localidades;
-    // Coincide por localidad o por partido; primero las que empiezan con lo escrito
-    const rank = l => { const n = norm(l.nombre); return n.startsWith(q) ? 0 : n.includes(q) ? 1 : 2; };
-    const hits = (q ? all.filter(l => norm(l.nombre).includes(q) || norm(l.partido).includes(q)) : all.slice())
-      .sort((a, b) => q ? rank(a) - rank(b) || a.nombre.localeCompare(b.nombre, "es") : 0);
+    // Primero coincidencias por NOMBRE: las que empiezan con lo escrito, después las que tienen
+    // una palabra que empieza así, después las que solo lo contienen. Por partido, solo si hay pocas.
+    const byName = l => { const n = norm(l.nombre); return n.startsWith(q) ? 0 : (" " + n).includes(" " + q) ? 1 : n.includes(q) ? 2 : -1; };
+    const abc = (a, b) => a.nombre.localeCompare(b.nombre, "es");
+    let hits;
+    if (!q) hits = all.slice();
+    else {
+      hits = all.filter(l => byName(l) >= 0).sort((a, b) => byName(a) - byName(b) || abc(a, b));
+      if (hits.length < 5) hits = hits.concat(all.filter(l => byName(l) < 0 && norm(l.partido).includes(q)).sort(abc));
+    }
     const cur = zona && !zona.otra ? norm(zona.nombre) : null;
-    const sub = l => [norm(l.nombre).includes(norm(l.partido)) ? "" : l.partido, showCordon(l) ? l.cordon : ""].filter(Boolean).join(" · ");
+    const sub = l => showPartido(l) ? l.partido : "";
     const item = (l, i) => '<li><button type="button" data-i="' + i + '"' + (norm(l.nombre) === cur ? ' class="cur"' : "") + ">" + esc(l.nombre) +
       (sub(l) ? "<small>" + esc(sub(l)) + "</small>" : "") + "</button></li>";
     $("#zlist").innerHTML = (hits.length ? hits.map(l => item(l, all.indexOf(l))).join("") : (q ? '<li class="none">No la encontramos. Si no está en la lista, elegí “Otra localidad”.</li>' : "")) +
@@ -758,7 +764,7 @@ body.lock{overflow:hidden}
     const b = e.target.closest("button"); if (!b) return;
     const i = b.dataset.i;
     if (i === "otra") setZone({ nombre: OTRA, cordon: OTRA, otra: true });
-    else { const l = zonas.localidades[Number(i)]; setZone({ nombre: l.nombre, cordon: l.cordon, otra: false }); }
+    else setZone({ ...zonas.localidades[Number(i)], otra: false });
     closeZone();
     if (zona.otra && !$("#sheet").hidden) $("#fOtraLocalidad").focus();
   });

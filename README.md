@@ -87,7 +87,11 @@ Editalo en GitHub (abrí el archivo → ícono del lápiz → *Commit changes*):
 - **Agregar una localidad:** copiá una línea de `localidades`, cambiá `nombre`, `partido` y
   `cordon`, y separala con una coma de la anterior (la última va sin coma). `cordon` tiene que
   estar escrito igual que en `minimos` (con tilde: `cordón`). El buscador ignora mayúsculas y
-  tildes, y también encuentra por partido (escribir "Lanús" muestra todas las de ese partido).
+  tildes. Muestra primero las localidades cuyo nombre coincide y, si son pocas, suma las del
+  partido escrito (con "Lanús" aparecen todas las de ese partido).
+- **El cordón no se le muestra al cliente:** solo define el mínimo. En la lista, a la derecha, se
+  ve el partido, y en el mensaje de WhatsApp sale "Localidad: Banfield (Lomas de Zamora)"
+  (CABA sale como "CABA"; "Otra localidad", con lo que escribió el cliente).
 - **Nombres repetidos:** cada `nombre` tiene que ser único. Si una localidad existe en dos
   partidos, agregale el partido entre paréntesis, como `Gerli (Avellaneda)` y `Gerli (Lanús)`.
 - **Borrar una localidad:** eliminá su línea (y la coma que sobre). Los clientes que la tenían
