@@ -68,25 +68,28 @@ Editalo en GitHub (abrí el archivo → ícono del lápiz → *Commit changes*):
 {
   "minimos": {
     "CABA": 200000,
-    "1er cordón": 250000,
-    "2do cordón": 300000,
-    "3er cordón": 350000,
-    "Otra localidad": 400000
+    "1er cordón": 300000,
+    "2do cordón": 400000,
+    "3er cordón": 450000,
+    "Otra localidad": 200000
   },
   "localidades": [
-    { "nombre": "CABA", "cordon": "CABA" },
-    { "nombre": "Lomas de Zamora", "cordon": "1er cordón" },
-    { "nombre": "Quilmes", "cordon": "2do cordón" },
-    { "nombre": "Pilar", "cordon": "3er cordón" }
+    { "nombre": "Banfield", "partido": "Lomas de Zamora", "cordon": "1er cordón" },
+    { "nombre": "Gerli (Avellaneda)", "partido": "Avellaneda", "cordon": "1er cordón" },
+    { "nombre": "Gerli (Lanús)", "partido": "Lanús", "cordon": "1er cordón" },
+    …
   ]
 }
 ```
 
 - **Cambiar un mínimo:** cambiá el número en `minimos` (sin puntos ni `$`: `250000`). Con `0`, esa
   zona no tiene mínimo ("Sin pedido mínimo").
-- **Agregar una localidad:** copiá una línea de `localidades`, cambiá `nombre` y `cordon`, y
-  separala con una coma de la anterior (la última va sin coma). `cordon` tiene que estar escrito
-  igual que en `minimos` (con tilde: `cordón`). El buscador ignora mayúsculas y tildes.
+- **Agregar una localidad:** copiá una línea de `localidades`, cambiá `nombre`, `partido` y
+  `cordon`, y separala con una coma de la anterior (la última va sin coma). `cordon` tiene que
+  estar escrito igual que en `minimos` (con tilde: `cordón`). El buscador ignora mayúsculas y
+  tildes, y también encuentra por partido (escribir "Lanús" muestra todas las de ese partido).
+- **Nombres repetidos:** cada `nombre` tiene que ser único. Si una localidad existe en dos
+  partidos, agregale el partido entre paréntesis, como `Gerli (Avellaneda)` y `Gerli (Lanús)`.
 - **Borrar una localidad:** eliminá su línea (y la coma que sobre). Los clientes que la tenían
   elegida vuelven a ver la pregunta de localidad.
 - **"Otra localidad"** es la opción del final de la lista: no se agrega en `localidades`, solo

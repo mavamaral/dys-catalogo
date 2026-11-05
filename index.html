@@ -693,8 +693,10 @@ body.lock{overflow:hidden}
   function localidadTexto(){
     if (!zona) return "";
     if (zona.otra) return $("#fOtraLocalidad").value.trim() + (zonas ? " (" + OTRA + ")" : "");
-    return zona.nombre + (norm(zona.cordon) !== norm(zona.nombre) ? " (" + zona.cordon + ")" : "");
+    return zona.nombre + (showCordon(zona) ? " (" + zona.cordon + ")" : "");
   }
+  // No repetir el cordón cuando ya está en el nombre (ej. "CABA (Ciudad de Buenos Aires)")
+  const showCordon = z => !z.otra && !norm(z.nombre).includes(norm(z.cordon));
   function resolveZone(saved){
     if (!saved || !zonas) return null;
     if (saved.otra) return { nombre: OTRA, cordon: OTRA, otra: true };
@@ -707,7 +709,7 @@ body.lock{overflow:hidden}
     if (zona){
       $("#zNombre").textContent = zona.nombre;
       $("#zMin").textContent = min > 0 ? "Pedido mínimo $" + fmt(min) : "Sin pedido mínimo";
-      $("#fLocNombre").innerHTML = esc(zona.nombre) + (zona.otra || norm(zona.cordon) === norm(zona.nombre) ? "" : " <small>(" + esc(zona.cordon) + ")</small>");
+      $("#fLocNombre").innerHTML = esc(zona.nombre) + (showCordon(zona) ? " <small>(" + esc(zona.cordon) + ")</small>" : "");
     }
     $("#locWrap").hidden = !zonas;
     $("#otraWrap").hidden = !(zona && zona.otra);
@@ -723,12 +725,14 @@ body.lock{overflow:hidden}
   function renderZoneList(){
     const q = norm($("#zq").value.trim());
     const all = zonas.localidades;
-    const hits = (q ? all.filter(l => norm(l.nombre).includes(q)) : all.slice())
-      .sort((a, b) => q ? (norm(b.nombre).startsWith(q) - norm(a.nombre).startsWith(q)) || a.nombre.localeCompare(b.nombre, "es") : 0)
-      .slice(0, 60);
+    // Coincide por localidad o por partido; primero las que empiezan con lo escrito
+    const rank = l => { const n = norm(l.nombre); return n.startsWith(q) ? 0 : n.includes(q) ? 1 : 2; };
+    const hits = (q ? all.filter(l => norm(l.nombre).includes(q) || norm(l.partido).includes(q)) : all.slice())
+      .sort((a, b) => q ? rank(a) - rank(b) || a.nombre.localeCompare(b.nombre, "es") : 0);
     const cur = zona && !zona.otra ? norm(zona.nombre) : null;
+    const sub = l => [norm(l.nombre).includes(norm(l.partido)) ? "" : l.partido, showCordon(l) ? l.cordon : ""].filter(Boolean).join(" · ");
     const item = (l, i) => '<li><button type="button" data-i="' + i + '"' + (norm(l.nombre) === cur ? ' class="cur"' : "") + ">" + esc(l.nombre) +
-      (norm(l.cordon) !== norm(l.nombre) ? "<small>" + esc(l.cordon) + "</small>" : "") + "</button></li>";
+      (sub(l) ? "<small>" + esc(sub(l)) + "</small>" : "") + "</button></li>";
     $("#zlist").innerHTML = (hits.length ? hits.map(l => item(l, all.indexOf(l))).join("") : (q ? '<li class="none">No la encontramos. Si no está en la lista, elegí “Otra localidad”.</li>' : "")) +
       '<li class="otra"><button type="button" data-i="otra"' + (zona && zona.otra ? ' class="cur"' : "") + ">" + OTRA + "</button></li>";
   }
@@ -771,7 +775,7 @@ body.lock{overflow:hidden}
       if (ok){
         zonas = {
           minimos: cfg.minimos,
-          localidades: cfg.localidades.filter(l => l && String(l.nombre || "").trim()).map(l => ({ nombre: String(l.nombre).trim(), cordon: String(l.cordon || OTRA).trim() }))
+          localidades: cfg.localidades.filter(l => l && String(l.nombre || "").trim()).map(l => ({ nombre: String(l.nombre).trim(), partido: String(l.partido || "").trim(), cordon: String(l.cordon || OTRA).trim() }))
         };
         zona = resolveZone(store.get(ZONE_KEY, null));
       } else {
