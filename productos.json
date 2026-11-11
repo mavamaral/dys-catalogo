@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-05",
+ "actualizado": "2026-11-11",
  "productos": [
   {
    "id": "s01",
@@ -864,12 +864,12 @@
    "art": "3221",
    "nombre": "Catit Litter Mat",
    "detalle": "Medium",
-   "precio": 10497,
+   "precio": 14675,
    "categoria": "Literas y accesorios",
    "animal": "Gatos",
    "orden": 70,
    "etiqueta": "",
-   "sinStock": true,
+   "sinStock": false,
    "foto": "fotos/s080.jpg?v=ae91e238"
   },
   {
@@ -877,12 +877,12 @@
    "art": "3222",
    "nombre": "Catit Litter Mat",
    "detalle": "Large",
-   "precio": 14485,
+   "precio": 19871,
    "categoria": "Literas y accesorios",
    "animal": "Gatos",
    "orden": 80,
    "etiqueta": "",
-   "sinStock": true,
+   "sinStock": false,
    "foto": "fotos/s081.jpg?v=fb803bbe"
   },
   {
@@ -1228,12 +1228,12 @@
    "art": "3514",
    "nombre": "Self Groom Catit 2.0",
    "detalle": "",
-   "precio": 4649,
+   "precio": 7443,
    "categoria": "Peluquería",
    "animal": "Gatos",
    "orden": 10,
    "etiqueta": "",
-   "sinStock": true,
+   "sinStock": false,
    "foto": "fotos/s111.jpg?v=fa9d9a2f"
   },
   {
@@ -1462,12 +1462,12 @@
    "art": "3532",
    "nombre": "Comedero Food Tree Catit 2.0 para Gatos",
    "detalle": "Blanco y verde",
-   "precio": 27723,
+   "precio": 42551,
    "categoria": "Juguetes y rascadores",
    "animal": "Gatos",
    "orden": 30,
    "etiqueta": "",
-   "sinStock": true,
+   "sinStock": false,
    "foto": "fotos/s092.jpg?v=37c2b81c"
   },
   {
@@ -1475,12 +1475,12 @@
    "art": "3533",
    "nombre": "Comedero Interactivo de Estimulación Gatos Catit 2.0 Digger",
    "detalle": "Color verde",
-   "precio": 16261,
+   "precio": 24927,
    "categoria": "Juguetes y rascadores",
    "animal": "Gatos",
    "orden": 40,
    "etiqueta": "",
-   "sinStock": true,
+   "sinStock": false,
    "foto": "fotos/s093.jpg?v=48e6be6f"
   },
   {
@@ -1488,12 +1488,12 @@
    "art": "3534",
    "nombre": "Centro Masajeador para Gatos Catit Senses Wellness Center",
    "detalle": "",
-   "precio": 26710,
+   "precio": 41006,
    "categoria": "Juguetes y rascadores",
    "animal": "Gatos",
    "orden": 50,
    "etiqueta": "",
-   "sinStock": true,
+   "sinStock": false,
    "foto": "fotos/s094.jpg?v=11cb54e4"
   },
   {
@@ -1501,12 +1501,12 @@
    "art": "3535",
    "nombre": "Juguete Gato Caza Pelota Estimulación Play Circuit Catit 2.0",
    "detalle": "",
-   "precio": 17060,
+   "precio": 26191,
    "categoria": "Juguetes y rascadores",
    "animal": "Gatos",
    "orden": 60,
    "etiqueta": "",
-   "sinStock": true,
+   "sinStock": false,
    "foto": "fotos/s095.jpg?v=ee11bb82"
   },
   {
@@ -1631,12 +1631,12 @@
    "art": "3604",
    "nombre": "Voyageur 200 - Mediana - Base Gris",
    "detalle": "56,5 x 37,6 x 30,8 cm",
-   "precio": 51308,
+   "precio": 57015,
    "categoria": "Transportadoras y viaje",
    "animal": "Perros",
    "orden": 20,
    "etiqueta": "",
-   "sinStock": true,
+   "sinStock": false,
    "foto": "fotos/s139.jpg?v=f5787737"
   },
   {
@@ -1683,7 +1683,7 @@
    "art": "3608",
    "nombre": "Voyageur 200",
    "detalle": "56,5 x 37,5 x 31 cm",
-   "precio": 49762,
+   "precio": 55330,
    "categoria": "Transportadoras",
    "animal": "Gatos",
    "orden": 20,
@@ -1742,6 +1742,19 @@
    "etiqueta": "",
    "sinStock": false,
    "foto": "fotos/s147.jpg?v=d59f1228"
+  },
+  {
+   "id": "jtzsu3k3wg37rs5f10cq",
+   "art": "3613",
+   "nombre": "Transportadora Catit Pixi Mio 2 en 1 con almohadón",
+   "detalle": "41390",
+   "precio": 136571,
+   "categoria": "Transportadoras",
+   "animal": "Gatos",
+   "orden": 30,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/jtzsu3k3wg37rs5f10cq.jpg?v=ce99fb7c"
   },
   {
    "id": "s067",
@@ -1825,7 +1838,7 @@
    "id": "s070",
    "art": "3807",
    "nombre": "Fuente Pixi Blanca Acero Inoxidable",
-   "detalle": "",
+   "detalle": "2,5 L",
    "precio": 76805,
    "categoria": "Comederos, bebederos y fuentes",
    "animal": "Gatos",
@@ -1859,6 +1872,19 @@
    "etiqueta": "",
    "sinStock": false,
    "foto": "fotos/h0eso38x38duqskvzhmb.jpg?v=a01ecda7"
+  },
+  {
+   "id": "1877lbbihzb4bsl3tgf6",
+   "art": "3810",
+   "nombre": "Fuente bebedero Catit Pixi Mini 1.35 Lt",
+   "detalle": "43705",
+   "precio": 53781,
+   "categoria": "Comederos, bebederos y fuentes",
+   "animal": "Gatos",
+   "orden": 110,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/1877lbbihzb4bsl3tgf6.jpg?v=3498d4ca"
   },
   {
    "id": "s100",
