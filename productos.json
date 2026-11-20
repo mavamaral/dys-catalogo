@@ -3057,6 +3057,19 @@
    "foto": "fotos/tqhragob6h0ceyw8abzf.jpg?v=31949b18"
   },
   {
+   "id": "zeptb7hhb6q883s0jr3a",
+   "art": "5043",
+   "nombre": "Lata Navideña Coleccionable + 120 g Bocaditos Del Mar Golocan",
+   "detalle": "",
+   "precio": 6769,
+   "categoria": "Snacks y Suplementos",
+   "animal": "Gatos",
+   "orden": 180,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/zeptb7hhb6q883s0jr3a.jpg?v=cf9272f5"
+  },
+  {
    "id": "n5100",
    "art": "5100",
    "nombre": "Palitos de Pollo Better Bones",
@@ -3198,6 +3211,19 @@
    "etiqueta": "",
    "sinStock": false,
    "foto": "fotos/wfol82radzlf5u0p1y78.jpg?v=b34bba36"
+  },
+  {
+   "id": "czlb96h3ybubnva4br4j",
+   "art": "5111",
+   "nombre": "Lata Navideña Coleccionable + 420 gr Bocaditos Golocan",
+   "detalle": "",
+   "precio": 10830,
+   "categoria": "Snacks y Suplementos",
+   "animal": "Perros",
+   "orden": 320,
+   "etiqueta": "",
+   "sinStock": false,
+   "foto": "fotos/czlb96h3ybubnva4br4j.jpg?v=76d209d7"
   }
  ]
 }
