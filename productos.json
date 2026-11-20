@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-17",
+ "actualizado": "2026-11-20",
  "productos": [
   {
    "id": "s01",
@@ -388,7 +388,7 @@
    "animal": "Perros",
    "orden": 80,
    "etiqueta": "",
-   "sinStock": false,
+   "sinStock": true,
    "foto": "fotos/s033.jpg?v=1d47ef20"
   },
   {
