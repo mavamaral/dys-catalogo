@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-20",
+ "actualizado": "2026-11-25",
  "productos": [
   {
    "id": "s01",
@@ -921,7 +921,7 @@
    "animal": "Gatos",
    "orden": 10,
    "etiqueta": "",
-   "sinStock": false,
+   "sinStock": true,
    "foto": "fotos/s074.jpg?v=05c1163b"
   },
   {
@@ -2091,7 +2091,7 @@
    "animal": "Perros",
    "orden": 70,
    "etiqueta": "",
-   "sinStock": false,
+   "sinStock": true,
    "foto": "fotos/s131.jpg?v=edd87fd3"
   },
   {
